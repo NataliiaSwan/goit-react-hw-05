@@ -1,0 +1,15 @@
+.movieList {
+  padding: 0 20px;
+}
+.movieItem {
+}
+
+.movieItem a {
+  color: blue;
+  text-decoration: underline;
+  font-size: 10px;
+}
+
+.movieItem a:hover {
+  color: darkblue;
+}
