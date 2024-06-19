@@ -58,7 +58,6 @@ const MovieDetailsPage = () => {
       <h3>Additional information</h3>
       <ul className={css.listDetails}>
         <li>
-          {/* <Link to={`/movies/${movieId}/cast`}>Cast</Link> */}
           <Link
             to={{
               pathname: `/movies/${movieId}/cast`,
@@ -69,7 +68,6 @@ const MovieDetailsPage = () => {
           </Link>
         </li>
         <li>
-          {/* <Link to={`/movies/${movieId}/reviews`}>Reviews</Link> */}
           <Link
             to={{
               pathname: `/movies/${movieId}/reviews`,
