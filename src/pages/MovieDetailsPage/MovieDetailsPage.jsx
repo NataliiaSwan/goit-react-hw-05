@@ -31,7 +31,7 @@ const MovieDetailsPage = () => {
     if (location.state && location.state.from) {
       navigate(location.state.from);
     } else {
-      navigate("/movies");
+      navigate("/");
     }
   };
 
@@ -58,10 +58,26 @@ const MovieDetailsPage = () => {
       <h3>Additional information</h3>
       <ul className={css.listDetails}>
         <li>
-          <Link to={`/movies/${movieId}/cast`}>Cast</Link>
+          {/* <Link to={`/movies/${movieId}/cast`}>Cast</Link> */}
+          <Link
+            to={{
+              pathname: `/movies/${movieId}/cast`,
+              state: { from: location.state ? location.state.from : "/" },
+            }}
+          >
+            Cast
+          </Link>
         </li>
         <li>
-          <Link to={`/movies/${movieId}/reviews`}>Reviews</Link>
+          {/* <Link to={`/movies/${movieId}/reviews`}>Reviews</Link> */}
+          <Link
+            to={{
+              pathname: `/movies/${movieId}/reviews`,
+              state: { from: location.state ? location.state.from : "/" },
+            }}
+          >
+            Reviews
+          </Link>
         </li>
       </ul>
 

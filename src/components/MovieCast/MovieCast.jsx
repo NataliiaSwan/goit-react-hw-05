@@ -10,6 +10,14 @@ const MovieCast = () => {
   const { movieId } = useParams();
   const [cast, setCast] = useState([]);
 
+  const handleGoBack = () => {
+    if (location.state && location.state.from) {
+      navigate(location.state.from);
+    } else {
+      navigate("/movies");
+    }
+  };
+
   useEffect(() => {
     const getCast = async () => {
       try {
@@ -29,19 +37,21 @@ const MovieCast = () => {
   }
 
   return (
-    <ul className={css.castList}>
-      {cast.map((actor) => (
-        <li key={actor.id} className={css.castItem}>
-          <img
-            src={getImageUrl(actor.profile_path)}
-            alt={actor.name}
-            className={css.castImage}
-          />
-          <p>{actor.name}</p>
-          <p>Character: {actor.character}</p>
-        </li>
-      ))}
-    </ul>
+    <div>
+      <ul className={css.castList}>
+        {cast.map((actor) => (
+          <li key={actor.id} className={css.castItem}>
+            <img
+              src={getImageUrl(actor.profile_path)}
+              alt={actor.name}
+              className={css.castImage}
+            />
+            <p>{actor.name}</p>
+            <p>Character: {actor.character}</p>
+          </li>
+        ))}
+      </ul>
+    </div>
   );
 };
 
