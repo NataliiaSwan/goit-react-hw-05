@@ -2,21 +2,16 @@ import { fetchMovieCredits, getImageUrl } from "../../Api/Api";
 
 import React, { useState, useEffect } from "react";
 
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate, useLocation } from "react-router-dom";
 
 import css from "./MovieCast.module.css";
 
 const MovieCast = () => {
   const { movieId } = useParams();
   const [cast, setCast] = useState([]);
-
-  const handleGoBack = () => {
-    if (location.state && location.state.from) {
-      navigate(location.state.from);
-    } else {
-      navigate("/movies");
-    }
-  };
+  const [error, setError] = useState(null);
+  const navigate = useNavigate();
+  const location = useLocation();
 
   useEffect(() => {
     const getCast = async () => {
@@ -25,6 +20,7 @@ const MovieCast = () => {
         setCast(castData);
       } catch (error) {
         console.error("Error fetching movie cast:", error);
+        setError("Failed to fetch cast information. Please try again later.");
         setCast([]);
       }
     };
@@ -32,8 +28,12 @@ const MovieCast = () => {
     getCast();
   }, [movieId]);
 
+  if (error) {
+    return <p>{error}</p>;
+  }
+
   if (cast.length === 0) {
-    return <p>No cast information available.</p>;
+    return null;
   }
 
   return (

@@ -1,5 +1,7 @@
 import { useState, useEffect } from "react";
 
+import { useSearchParams } from "react-router-dom";
+
 import MovieList from "../../components/MovieList/MovieList";
 
 import { searchMovies } from "../../Api/Api";
@@ -7,13 +9,24 @@ import { searchMovies } from "../../Api/Api";
 import css from "./MoviePage.module.css";
 
 const MoviesPage = () => {
-  const [query, setQuery] = useState("");
   const [movies, setMovies] = useState([]);
+  const [searchParams, setSearchParams] = useSearchParams();
+  const query = searchParams.get("query") || "";
+  const [inputValue, setInputValue] = useState(query);
 
-  const handleSearch = async (event) => {
+  useEffect(() => {
+    const fetchMovies = async () => {
+      if (query) {
+        const searchResults = await searchMovies(query);
+        setMovies(searchResults);
+      }
+    };
+    fetchMovies();
+  }, [query]);
+
+  const handleSearch = (event) => {
     event.preventDefault();
-    const searchResults = await searchMovies(query);
-    setMovies(searchResults);
+    setSearchParams({ query: inputValue });
   };
 
   return (
@@ -21,8 +34,10 @@ const MoviesPage = () => {
       <form className={css.searchForm} onSubmit={handleSearch}>
         <input
           type="text"
-          value={query}
-          onChange={(e) => setQuery(e.target.value)}
+          name="query"
+          value={inputValue}
+          onChange={(e) => setInputValue(e.target.value)}
+          autoComplete="off"
         />
         <button type="submit">Search</button>
       </form>

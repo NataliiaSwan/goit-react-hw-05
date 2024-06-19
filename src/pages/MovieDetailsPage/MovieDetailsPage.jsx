@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, Suspense, useRef } from "react";
 import {
   useParams,
   Link,
@@ -6,17 +6,25 @@ import {
   Route,
   useNavigate,
   useLocation,
+  Outlet,
 } from "react-router-dom";
 import { fetchMovieDetails, getImageUrl } from "../../Api/Api";
-import MovieCast from "../../components/MovieCast/MovieCast";
-import MovieReviews from "../../components/MovieReviews/MovieReviews";
+
 import css from "./MovieDetailsPage.module.css";
+
+const MovieCast = React.lazy(() =>
+  import("../../components/MovieCast/MovieCast")
+);
+const MovieReviews = React.lazy(() =>
+  import("../../components/MovieReviews/MovieReviews")
+);
 
 const MovieDetailsPage = () => {
   const { movieId } = useParams();
   const [movie, setMovie] = useState(null);
   const navigate = useNavigate();
   const location = useLocation();
+  const locationRef = useRef(location.state);
 
   useEffect(() => {
     const getMovieDetails = async () => {
@@ -28,10 +36,10 @@ const MovieDetailsPage = () => {
   }, [movieId]);
 
   const handleGoBack = () => {
-    if (location.state && location.state.from) {
-      navigate(location.state.from);
+    if (locationRef.current && locationRef.current.from) {
+      navigate(locationRef.current.from);
     } else {
-      navigate("/");
+      navigate("/movies");
     }
   };
 
@@ -61,7 +69,9 @@ const MovieDetailsPage = () => {
           <Link
             to={{
               pathname: `/movies/${movieId}/cast`,
-              state: { from: location.state ? location.state.from : "/" },
+              state: {
+                from: locationRef.current ? locationRef.current.from : "/",
+              },
             }}
           >
             Cast
@@ -71,18 +81,22 @@ const MovieDetailsPage = () => {
           <Link
             to={{
               pathname: `/movies/${movieId}/reviews`,
-              state: { from: location.state ? location.state.from : "/" },
+              state: {
+                from: locationRef.current ? locationRef.current.from : "/",
+              },
             }}
           >
             Reviews
           </Link>
         </li>
       </ul>
-
-      <Routes>
-        <Route path="cast" element={<MovieCast />} />
-        <Route path="reviews" element={<MovieReviews />} />
-      </Routes>
+      <Suspense fallback={<div>Loading...</div>}>
+        <Routes>
+          <Route path="/" element={<Outlet />} />
+          <Route path="cast" element={<MovieCast />} />
+          <Route path="reviews" element={<MovieReviews />} />
+        </Routes>
+      </Suspense>
     </div>
   );
 };
