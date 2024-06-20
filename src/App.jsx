@@ -17,17 +17,28 @@ const NotFoundPage = React.lazy(() =>
 const Navigation = React.lazy(() =>
   import("./components/Navigation/Navigation")
 );
+const MovieCast = React.lazy(() => import("./components/MovieCast/MovieCast"));
+
+const MovieReviews = React.lazy(() =>
+  import("./components/MovieReviews/MovieReviews")
+);
 
 const App = () => {
   return (
     <>
-      <Suspense fallback={<div>Loading...</div>}></Suspense>
-      <Navigation />
+      <Suspense fallback={<div>Loading...</div>}>
+        <Navigation />
+      </Suspense>
       <Suspense fallback={<div>Loading...</div>}>
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/movies" element={<MoviesPage />} />
-          <Route path="/movies/:movieId/*" element={<MovieDetailsPage />} />
+          <Route
+            path="/movies/:movieId/*"
+            element={<MovieDetailsPage />}
+          ></Route>
+          <Route path="cast" element={<MovieCast />} />
+          <Route path="reviews" element={<MovieReviews />} />
           <Route path="*" element={<NotFoundPage />} />
         </Routes>
       </Suspense>
